@@ -2,7 +2,9 @@ package client_test
 
 import (
   "io/ioutil"
-  . "github.com/pieoneers/jsonapi-client-go.git"
+
+  . "github.com/pieoneers/jsonapi-client-go"
+
   . "github.com/onsi/ginkgo"
   . "github.com/onsi/gomega"
 )
@@ -13,11 +15,12 @@ var _ = Describe("Request", func() {
 
     Describe("Method", func() {
       for _, method := range []string{ "GET", "POST" } {
+
         When(method, func() {
           var request *Request
 
           BeforeEach(func() {
-            request, _ = NewRequest(method, "/foobar", nil)
+            request, _ = NewRequest(method, "/foo", nil)
           })
 
           It("should be equal GET", func() {
@@ -30,14 +33,14 @@ var _ = Describe("Request", func() {
     Describe("URL", func() {
       var request *Request
 
-      expectedURL := "/foobar"
+      url := "/bar"
 
       BeforeEach(func() {
-        request, _ = NewRequest("GET", expectedURL, nil)
+        request, _ = NewRequest("GET", url, nil)
       })
 
       It("should be correct", func() {
-        Ω(request.URL).Should(Equal(expectedURL))
+        Ω(request.URL).Should(Equal(url))
       })
     })
 
@@ -46,7 +49,7 @@ var _ = Describe("Request", func() {
 
       When("there is no payload", func() {
         BeforeEach(func() {
-          request, _ = NewRequest("GET", "/users", nil)
+          request, _ = NewRequest("GET", "/books", nil)
         })
 
         It("should have correct Accept header", func() {
@@ -62,11 +65,9 @@ var _ = Describe("Request", func() {
 
       When("there is payload", func() {
         BeforeEach(func() {
-          request, _ = NewRequest("POST", "/users", User{
-            Email:     "andrew@pieoneers.com",
-            Password:  "password",
-            FirstName: "Andrew",
-            LastName:  "Manshin",
+          request, _ = NewRequest("POST", "/books", Book{
+            Title: "An Introduction to Programming in Go",
+            Year: "2012",
           })
         })
 
@@ -87,7 +88,7 @@ var _ = Describe("Request", func() {
 
       When("there is no payload", func() {
         BeforeEach(func() {
-          request, _ = NewRequest("GET", "/users", nil)
+          request, _ = NewRequest("GET", "/books", nil)
         })
 
         It("should have empty body", func() {
@@ -97,31 +98,20 @@ var _ = Describe("Request", func() {
       })
 
       When("there is payload", func() {
+        payload := Book{
+          Title: "An Introduction to Programming in Go",
+          Year: "2012",
+        }
+
         BeforeEach(func() {
-          request, _ = NewRequest("POST", "/users", User{
-            Email:     "andrew@pieoneers.com",
-            Password:  "password",
-            FirstName: "Andrew",
-            LastName:  "Manshin",
-          })
+          request, _ = NewRequest("POST", "/books", payload)
         })
 
-        It("should have jsonapi representation of user in body", func() {
-          buf, _ := ioutil.ReadAll(request.Body)
-          actual := string(buf)
-          Ω(actual).Should(MatchJSON(`
-            {
-              "data": {
-                "type": "users",
-                "attributes": {
-                  "email": "andrew@pieoneers.com",
-                  "password": "password",
-                  "first_name": "Andrew",
-                  "last_name": "Manshin"
-                }
-              }
-            }
-          `))
+        It("should have book payload in body", func() {
+          actual, _ := ioutil.ReadAll(request.Body)
+          expected, _ := Template("book-payload", payload)
+
+          Ω(actual).Should(MatchJSON(expected))
         })
       })
     })

@@ -1,22 +1,20 @@
 package client_test
 
-type User struct {
-  ID        string `json:"-"`
-  Email     string `json:"email"`
-  Password  string `json:"password"`
-  FirstName string `json:"first_name"`
-  LastName  string `json:"last_name"`
+type Book struct {
+  ID    string `json:"-"`
+  Title string `json:"title"`
+  Year  string `json:"year"`
 }
 
-func(u User) GetID() string {
-  return u.ID
+func(b Book) GetID() string {
+  return b.ID
 }
 
-func(u User) GetType() string {
-  return "users"
+func(b Book) GetType() string {
+  return "books"
 }
 
-func(u *User) SetID(id string) error {
-  u.ID = id
+func(b *Book) SetID(id string) error {
+  b.ID = id
   return nil
 }

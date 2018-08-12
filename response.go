@@ -7,5 +7,5 @@ import (
 
 type Response struct {
   http.Response
-  Errors []*jsonapi.ErrorObject
+  Document *jsonapi.Document
 }

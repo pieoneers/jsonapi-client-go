@@ -2,11 +2,11 @@ package client_test
 
 import (
 	"testing"
-  "fmt"
   "net/http"
   "net/http/httptest"
+  "github.com/pieoneers/jsonapi-go"
 
-  . "github.com/pieoneers/jsonapi-client-go.git"
+  . "github.com/pieoneers/jsonapi-client-go"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -23,24 +23,55 @@ var (
 )
 
 var _ = BeforeSuite(func() {
-  ts = httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, `
-      {
-        "data": {
-          "type": "users",
-          "id": "1",
-          "attributes": {
-            "email": "andrew@pieoneers.com",
-            "password": "password",
-            "first_name": "Andrew",
-            "last_name": "Manshin"
-          }
-        }
-      }
-    `)
-  }))
 
-  ts.Start()
+  InitTemplates()
+
+  mux := http.NewServeMux()
+
+  mux.HandleFunc("/books", func(w http.ResponseWriter, r *http.Request) {
+    body, _ := Template("books", []Book{
+      {
+        ID: "1",
+        Title: "An Introduction to Programming in Go",
+        Year: "2012",
+      },
+      {
+        ID: "2",
+        Title: "Introducing Go",
+        Year: "2016",
+      },
+    })
+
+    w.WriteHeader(http.StatusOK)
+    w.Write(body.Bytes())
+  })
+
+  mux.HandleFunc("/books/successful", func(w http.ResponseWriter, r *http.Request) {
+    body, _ := Template("book", Book{
+      ID: "1",
+      Title: "An Introduction to Programming in Go",
+      Year: "2012",
+    })
+
+    w.WriteHeader(http.StatusCreated)
+    w.Write(body.Bytes())
+  })
+
+  mux.HandleFunc("/books/unsuccessful", func(w http.ResponseWriter, r *http.Request) {
+    body, _ := Template("errors", []*jsonapi.ErrorObject{
+      {
+        Title: "is required",
+        Source: jsonapi.ErrorObjectSource{
+          Pointer: "/data/attributes/title",
+        },
+      },
+    })
+
+    w.WriteHeader(http.StatusForbidden)
+    w.Write(body.Bytes())
+  })
+
+  ts = httptest.NewServer(mux)
 
   client = NewClient(Config{
     BaseURL: ts.URL,

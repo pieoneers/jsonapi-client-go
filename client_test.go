@@ -3,8 +3,9 @@ package client_test
 import (
   "net/http"
   "io/ioutil"
+  "github.com/pieoneers/jsonapi-go"
 
-  . "github.com/pieoneers/jsonapi-client-go.git"
+  . "github.com/pieoneers/jsonapi-client-go"
 
   . "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -15,10 +16,10 @@ var _ = Describe("Client", func() {
   Describe("Get", func() {
     var request *Request
 
-    expectedURL := "/foo"
+    url := "/foo"
 
     BeforeEach(func() {
-      request, _ = client.Get(expectedURL)
+      request, _ = client.Get(url)
     })
 
     It("should return request with correct method", func() {
@@ -26,22 +27,22 @@ var _ = Describe("Client", func() {
     })
 
     It("should return request with correct url", func() {
-      Ω(request.URL).Should(Equal(expectedURL))
+      Ω(request.URL).Should(Equal(url))
     })
   })
 
   Describe("Post", func() {
     var request *Request
 
-    expectedURL := "/bar"
+    url := "/bar"
+
+    book := Book{
+      Title: "An Introduction to Programming in Go",
+      Year: "2012",
+    }
 
     BeforeEach(func() {
-      request, _ = client.Post(expectedURL, User{
-        Email:     "andrew@pieoneers.com",
-        Password:  "password",
-        FirstName: "Andrew",
-        LastName:  "Manshin",
-      })
+      request, _ = client.Post(url, book)
     })
 
     It("should return request with correct method", func() {
@@ -49,26 +50,14 @@ var _ = Describe("Client", func() {
     })
 
     It("should return request with correct url", func() {
-      Ω(request.URL).Should(Equal(expectedURL))
+      Ω(request.URL).Should(Equal(url))
     })
 
     It("should return request with correct body", func() {
-      buf, _ := ioutil.ReadAll(request.Body)
-      body := string(buf)
+      actual, _ := ioutil.ReadAll(request.Body)
+      expected, _ := Template("book-payload", book)
 
-      Ω(body).Should(MatchJSON(`
-        {
-          "data": {
-            "type": "users",
-            "attributes": {
-              "email": "andrew@pieoneers.com",
-              "password": "password",
-              "first_name": "Andrew",
-              "last_name": "Manshin"
-            }
-          }
-        }
-      `))
+      Ω(actual).Should(MatchJSON(expected))
     })
   })
 
@@ -78,35 +67,99 @@ var _ = Describe("Client", func() {
       err error
     )
 
-    var target User
+    Describe("GET /books", func() {
 
-    BeforeEach(func() {
-      req, _ := client.Post("/users", User{
-        Email:     "andrew@pieoneers.com",
-        Password:  "password",
-        FirstName: "Andrew",
-        LastName:  "Manshin",
+      var target []*Book
+
+      BeforeEach(func() {
+        target = []*Book{}
+
+        req, _ := client.Get("/books")
+
+        res, err = client.Do(req, &target)
       })
 
-      res, err = client.Do(req, &target)
+      It("should have 200 status", func() {
+        Ω(res.StatusCode).Should(Equal(http.StatusOK))
+      })
+
+      It("should unmarshal response body to target", func() {
+        Ω(target).Should(Equal([]*Book{
+          {
+            ID: "1",
+            Title: "An Introduction to Programming in Go",
+            Year: "2012",
+          },
+          {
+            ID: "2",
+            Title: "Introducing Go",
+            Year: "2016",
+          },
+        }))
+      })
     })
 
-    It("should respond with 200", func() {
-      Ω(res.StatusCode).Should(Equal(http.StatusOK))
-    })
+    Describe("POST /books", func() {
+      var target Book
 
-    It("should unmarshal response body to target", func() {
-      Ω(target).Should(Equal(User{
-        ID:        "1",
-        Email:     "andrew@pieoneers.com",
-        Password:  "password",
-        FirstName: "Andrew",
-        LastName:  "Manshin",
-      }))
-    })
+      BeforeEach(func() {
+        target = Book{}
+      })
 
-    It("should not have error occured", func() {
-      Ω(err).ShouldNot(HaveOccurred())
+      When("successful", func() {
+
+        BeforeEach(func() {
+          req, _ := client.Post("/books/successful", Book{
+            Title: "An Introduction to Programming in Go",
+            Year: "2012",
+          })
+
+          res, err = client.Do(req, &target)
+        })
+
+        It("should respond with 201 status", func() {
+          Ω(res.StatusCode).Should(Equal(http.StatusCreated))
+        })
+
+        It("should unmarshal response body to target", func() {
+          Ω(target).Should(Equal(Book{
+            ID:    "1",
+            Title: "An Introduction to Programming in Go",
+            Year:  "2012",
+          }))
+        })
+      })
+
+      When("with errors", func() {
+
+        BeforeEach(func() {
+          req, _ := client.Post("/books/unsuccessful", Book{
+            Title: "",
+            Year: "2012",
+          })
+
+          res, err = client.Do(req, &target)
+        })
+
+        It("should respond with 403 status", func() {
+          Ω(res.StatusCode).Should(Equal(http.StatusForbidden))
+        })
+
+        It("should leave target empty", func() {
+          Ω(target).Should(Equal(Book{}))
+        })
+
+        It("should store errors in response", func() {
+          Ω(res.Document.Errors).Should(Equal([]*jsonapi.ErrorObject{
+            {
+              Title: "is required",
+              Source: jsonapi.ErrorObjectSource{
+                Pointer: "/data/attributes/title",
+              },
+            },
+          }))
+        })
+      })
     })
   })
 })
