@@ -160,6 +160,26 @@ var _ = Describe("Client", func() {
           }))
         })
       })
+
+      When("there is no target", func() {
+
+        BeforeEach(func() {
+          req, _ := client.Post("/books/successful", Book{
+            Title: "An Introduction to Programming in Go",
+            Year: "2012",
+          })
+
+          res, err = client.Do(req, nil)
+        })
+
+        It("should not have document assigned", func() {
+          Ω(res.Document).Should(BeNil())
+        })
+
+        It("should not have error occurred", func() {
+          Ω(err).ShouldNot(HaveOccurred())
+        })
+      })
     })
   })
 })

@@ -1,6 +1,7 @@
 package client
 
 import (
+  "reflect"
   "net/http"
   "io/ioutil"
   "github.com/pieoneers/jsonapi-go"
@@ -67,36 +68,19 @@ func(c *Client) Do(req *Request, out interface{}) (*Response, error) {
     },
   }
 
-  // if res.StatusCode >= 200 && res.StatusCode <= 299 {
-  //   if reflect.TypeOf(out) != nil {
-      payload, readErr := ioutil.ReadAll(res.Body)
-      if readErr != nil {
-        return nil, readErr
-      }
+  payload, readErr := ioutil.ReadAll(res.Body)
+  if readErr != nil {
+    return nil, readErr
+  }
 
-      document, unmarshalErr := jsonapi.Unmarshal(payload, out)
-      if unmarshalErr != nil {
-        return nil, unmarshalErr
-      }
-  //   }
-  // }
+  if len(payload) > 0 && reflect.TypeOf(out) != nil {
+    document, unmarshalErr := jsonapi.Unmarshal(payload, out)
+    if unmarshalErr != nil {
+      return nil, unmarshalErr
+    }
 
-  // if res.StatusCode >= 400 && res.StatusCode <= 499 {
-  //   payload, readErr := ioutil.ReadAll(res.Body)
-  //   if readErr != nil {
-  //     return nil, readErr
-  //   }
-  //
-  //   errs := []*jsonapi.ErrorObject{}
-  //
-  //   unmarshalErr := jsonapi.Unmarshal(payload, &errs)
-  //   if unmarshalErr != nil {
-  //     return nil, unmarshalErr
-  //   }
-  //
-  //   res.Errors = errs
-  // }
-  res.Document = document
+    res.Document = document
+  }
 
   return &res, nil
 }
