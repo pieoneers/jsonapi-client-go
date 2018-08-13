@@ -10,18 +10,18 @@ type Config struct {
 }
 
 func NewConfig(c Config) Config {
-  config := Config{
+  defaults := Config{
     BaseURL: "http://localhost",
     Timeout: time.Second * 10,
   }
 
-  if len(c.BaseURL) > 0 {
-    config.BaseURL = c.BaseURL
+  if len(c.BaseURL) == 0 {
+    c.BaseURL = defaults.BaseURL
   }
 
-  if c.Timeout > 0 {
-    config.Timeout = c.Timeout
+  if c.Timeout == 0 {
+    c.Timeout = defaults.Timeout
   }
 
-  return config
+  return c
 }
