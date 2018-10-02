@@ -31,6 +31,24 @@ var _ = Describe("Client", func() {
     })
   })
 
+  Describe("Head", func() {
+    var request *Request
+
+    url := "/foo"
+
+    BeforeEach(func() {
+      request, _ = client.Head(url)
+    })
+
+    It("should return request with correct method", func() {
+      Ω(request.Method).Should(Equal("HEAD"))
+    })
+
+    It("should return request with correct url", func() {
+      Ω(request.URL).Should(Equal(url))
+    })
+  })
+
   Describe("Post", func() {
     var request *Request
 

@@ -34,6 +34,15 @@ func(c *Client) Get(path string) (*Request, error) {
   return req, nil
 }
 
+func(c *Client) Head(path string) (*Request, error) {
+  req, reqErr := NewRequest("HEAD", path, nil)
+  if reqErr != nil {
+    return nil, reqErr
+  }
+
+  return req, nil
+}
+
 func(c *Client) Post(path string, in interface{}) (*Request, error) {
   req, reqErr := NewRequest("POST", path, in)
   if reqErr != nil {
