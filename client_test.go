@@ -16,43 +16,43 @@ var _ = Describe("Client", func() {
   Describe("Get", func() {
     var request *Request
 
-    url := "/foo"
+    path := "/foo"
 
     BeforeEach(func() {
-      request, _ = client.Get(url)
+      request, _ = client.Get(path)
     })
 
     It("should return request with correct method", func() {
       Ω(request.Method).Should(Equal("GET"))
     })
 
-    It("should return request with correct url", func() {
-      Ω(request.URL).Should(Equal(url))
+    It("should return request with correct path", func() {
+      Ω(request.URL.Path).Should(Equal(path))
     })
   })
 
   Describe("Head", func() {
     var request *Request
 
-    url := "/foo"
+    path := "/foo"
 
     BeforeEach(func() {
-      request, _ = client.Head(url)
+      request, _ = client.Head(path)
     })
 
     It("should return request with correct method", func() {
       Ω(request.Method).Should(Equal("HEAD"))
     })
 
-    It("should return request with correct url", func() {
-      Ω(request.URL).Should(Equal(url))
+    It("should return request with correct path", func() {
+      Ω(request.URL.Path).Should(Equal(path))
     })
   })
 
   Describe("Post", func() {
     var request *Request
 
-    url := "/bar"
+    path := "/bar"
 
     book := Book{
       Title: "An Introduction to Programming in Go",
@@ -60,15 +60,15 @@ var _ = Describe("Client", func() {
     }
 
     BeforeEach(func() {
-      request, _ = client.Post(url, book)
+      request, _ = client.Post(path, book)
     })
 
     It("should return request with correct method", func() {
       Ω(request.Method).Should(Equal("POST"))
     })
 
-    It("should return request with correct url", func() {
-      Ω(request.URL).Should(Equal(url))
+    It("should return request with correct path", func() {
+      Ω(request.URL.Path).Should(Equal(path))
     })
 
     It("should return request with correct body", func() {

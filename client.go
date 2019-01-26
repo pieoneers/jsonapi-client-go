@@ -56,7 +56,7 @@ func(c *Client) Do(req *Request, out interface{}) (*Response, error) {
   baseURL    := c.Config.BaseURL
   httpClient := c.httpClient
 
-  httpReq, reqErr := http.NewRequest(req.Method, baseURL + req.URL, req.Body)
+  httpReq, reqErr := http.NewRequest(req.Method, baseURL + req.RequestURI(), req.Body)
   if reqErr != nil {
     return nil, reqErr
   }

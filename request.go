@@ -5,6 +5,7 @@ import (
   "io/ioutil"
   "bytes"
   "reflect"
+  "net/url"
   "net/http"
   "github.com/pieoneers/jsonapi-go"
 )
@@ -13,17 +14,25 @@ const jsonapiContentType = "application/vnd.api+json"
 
 type Request struct {
   Method string
-  URL string
+  URL *url.URL
+  Query url.Values
   Header http.Header
   Body io.ReadCloser
 }
 
-func NewRequest(method, url string, in interface{}) (*Request, error) {
+func NewRequest(method, rawurl string, in interface{}) (*Request, error) {
+  url, urlErr := url.ParseRequestURI(rawurl)
+  if urlErr != nil {
+    return nil, urlErr
+  }
+
   req := Request{
     Method: method,
     URL: url,
     Header: make(http.Header),
   }
+
+  req.Query = req.URL.Query()
 
   req.Header.Add("Accept", jsonapiContentType)
 
@@ -39,4 +48,9 @@ func NewRequest(method, url string, in interface{}) (*Request, error) {
   }
 
   return &req, nil
+}
+
+func(req *Request) RequestURI() string {
+  req.URL.RawQuery = req.Query.Encode()
+  return req.URL.RequestURI()
 }

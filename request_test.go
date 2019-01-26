@@ -31,16 +31,20 @@ var _ = Describe("Request", func() {
     })
 
     Describe("URL", func() {
-      var request *Request
+      var req *Request
 
-      url := "/bar"
+      url := "/bar?include=foo"
 
       BeforeEach(func() {
-        request, _ = NewRequest("GET", url, nil)
+        req, _ = NewRequest("GET", url, nil)
       })
 
-      It("should be correct", func() {
-        Ω(request.URL).Should(Equal(url))
+      It("should set correct path", func() {
+        Ω(req.URL.Path).Should(Equal("/bar"))
+      })
+
+      It("should set correct query", func() {
+        Ω(req.URL.RawQuery).Should(Equal("include=foo"))
       })
     })
 
@@ -113,6 +117,49 @@ var _ = Describe("Request", func() {
 
           Ω(actual).Should(MatchJSON(expected))
         })
+      })
+    })
+  })
+
+  Describe("RequestURI", func() {
+    var (
+      req *Request
+      url string
+    )
+
+    BeforeEach(func() {
+      req, _ = NewRequest("GET", "/foo", nil)
+    })
+
+    JustBeforeEach(func() {
+      url = req.RequestURI()
+    })
+
+    It("should return correct url", func() {
+      Ω(url).Should(Equal("/foo"))
+    })
+
+    When("query is passed in url", func() {
+
+      BeforeEach(func() {
+        req, _ = NewRequest("GET", "/foo?include=bar,baz", nil)
+      })
+
+      It("should return correct url", func() {
+        Ω(url).Should(Equal("/foo?include=bar%2Cbaz"))
+      })
+    })
+
+    When("query is set afterwards", func() {
+
+      BeforeEach(func() {
+        query := req.Query
+        query.Set("include", "bar,baz")
+        query.Set("filter[id]", "quux")
+      })
+
+      It("should return correct url", func() {
+        Ω(url).Should(Equal("/foo?filter%5Bid%5D=quux&include=bar%2Cbaz"))
       })
     })
   })
