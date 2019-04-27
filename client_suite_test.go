@@ -4,6 +4,7 @@ import (
 	"testing"
   "net/http"
   "net/http/httptest"
+  "github.com/gin-gonic/gin"
   "github.com/pieoneers/jsonapi-go"
 
   . "github.com/pieoneers/jsonapi-client-go"
@@ -26,9 +27,9 @@ var _ = BeforeSuite(func() {
 
   InitTemplates()
 
-  mux := http.NewServeMux()
+  router := gin.Default()
 
-  mux.HandleFunc("/books", func(w http.ResponseWriter, r *http.Request) {
+  router.GET("/books", func(c *gin.Context) {
     body, _ := Template("books", []Book{
       {
         ID: "1",
@@ -42,22 +43,20 @@ var _ = BeforeSuite(func() {
       },
     })
 
-    w.WriteHeader(http.StatusOK)
-    w.Write(body.Bytes())
+    c.Data(http.StatusOK, jsonapi.ContentType, body.Bytes())
   })
 
-  mux.HandleFunc("/books/successful", func(w http.ResponseWriter, r *http.Request) {
+  router.POST("/books/successful", func(c *gin.Context) {
     body, _ := Template("book", Book{
       ID: "1",
       Title: "An Introduction to Programming in Go",
       Year: "2012",
     })
 
-    w.WriteHeader(http.StatusCreated)
-    w.Write(body.Bytes())
+    c.Data(http.StatusCreated, jsonapi.ContentType, body.Bytes())
   })
 
-  mux.HandleFunc("/books/unsuccessful", func(w http.ResponseWriter, r *http.Request) {
+  router.POST("/books/unsuccessful", func(c *gin.Context) {
     body, _ := Template("errors", []*jsonapi.ErrorObject{
       {
         Title: "is required",
@@ -67,11 +66,10 @@ var _ = BeforeSuite(func() {
       },
     })
 
-    w.WriteHeader(http.StatusForbidden)
-    w.Write(body.Bytes())
+    c.Data(http.StatusBadRequest, jsonapi.ContentType, body.Bytes())
   })
 
-  ts = httptest.NewServer(mux)
+  ts = httptest.NewServer(router)
 
   client = NewClient(Config{
     BaseURL: ts.URL,

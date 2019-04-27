@@ -159,8 +159,8 @@ var _ = Describe("Client", func() {
           res, err = client.Do(req, &target)
         })
 
-        It("should respond with 403 status", func() {
-          Ω(res.StatusCode).Should(Equal(http.StatusForbidden))
+        It("should respond with 400 status", func() {
+          Ω(res.StatusCode).Should(Equal(http.StatusBadRequest))
         })
 
         It("should leave target empty", func() {
