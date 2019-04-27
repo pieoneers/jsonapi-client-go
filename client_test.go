@@ -86,11 +86,10 @@ var _ = Describe("Client", func() {
     )
 
     Describe("GET /books", func() {
-
-      var target []*Book
+      var target Books
 
       BeforeEach(func() {
-        target = []*Book{}
+        target = Books{}
 
         req, _ := client.Get("/books")
 
@@ -101,8 +100,8 @@ var _ = Describe("Client", func() {
         Ω(res.StatusCode).Should(Equal(http.StatusOK))
       })
 
-      It("should unmarshal response body to target", func() {
-        Ω(target).Should(Equal([]*Book{
+      It("should unmarshal resource objects collection into target", func() {
+        Ω(target).Should(Equal(Books{
           {
             ID: "1",
             Title: "An Introduction to Programming in Go",
@@ -139,7 +138,7 @@ var _ = Describe("Client", func() {
           Ω(res.StatusCode).Should(Equal(http.StatusCreated))
         })
 
-        It("should unmarshal response body to target", func() {
+        It("should unmarshal resource object into target", func() {
           Ω(target).Should(Equal(Book{
             ID:    "1",
             Title: "An Introduction to Programming in Go",
@@ -148,7 +147,7 @@ var _ = Describe("Client", func() {
         })
       })
 
-      When("with errors", func() {
+      When("with validation errors", func() {
 
         BeforeEach(func() {
           req, _ := client.Post("/books/unsuccessful", Book{
@@ -163,16 +162,14 @@ var _ = Describe("Client", func() {
           Ω(res.StatusCode).Should(Equal(http.StatusBadRequest))
         })
 
-        It("should leave target empty", func() {
-          Ω(target).Should(Equal(Book{}))
-        })
-
-        It("should store errors in response", func() {
-          Ω(res.Document.Errors).Should(Equal([]*jsonapi.ErrorObject{
-            {
-              Title: "is required",
-              Source: jsonapi.ErrorObjectSource{
-                Pointer: "/data/attributes/title",
+        It("should unmarshal errors into target", func() {
+          Ω(target).Should(Equal(Book{
+            ValidationErrors: []*jsonapi.ErrorObject{
+              {
+                Title: "is required",
+                Source: jsonapi.ErrorObjectSource{
+                  Pointer: "/data/attributes/title",
+                },
               },
             },
           }))

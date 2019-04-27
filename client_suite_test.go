@@ -30,7 +30,7 @@ var _ = BeforeSuite(func() {
   router := gin.Default()
 
   router.GET("/books", func(c *gin.Context) {
-    body, _ := Template("books", []Book{
+    body, _ := Template("books", Books{
       {
         ID: "1",
         Title: "An Introduction to Programming in Go",

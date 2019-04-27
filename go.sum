@@ -17,6 +17,16 @@ github.com/pieoneers/jsonapi-go v0.0.0-20180928021141-d8049839566e h1:hnWI7XAoUL
 github.com/pieoneers/jsonapi-go v0.0.0-20180928021141-d8049839566e/go.mod h1:Cu+e3Ld0kU/jwnEkHFvQjqB7hafjYsF+Wo18EZp/xkg=
 github.com/pieoneers/jsonapi-go v0.0.0-20190125010526-4b42a16bc774 h1:pTyaCpX//vGUHFfN8P58NgIaFMlsE/swxN2/Uj//hMM=
 github.com/pieoneers/jsonapi-go v0.0.0-20190125010526-4b42a16bc774/go.mod h1:Cu+e3Ld0kU/jwnEkHFvQjqB7hafjYsF+Wo18EZp/xkg=
+github.com/pieoneers/jsonapi-go v0.0.0-20190424131147-50adead9b361 h1:lm7sPhsNtk5NXlW8erYZwbdWyweYanUX4Dp+I+jxZfw=
+github.com/pieoneers/jsonapi-go v0.0.0-20190424131147-50adead9b361/go.mod h1:Cu+e3Ld0kU/jwnEkHFvQjqB7hafjYsF+Wo18EZp/xkg=
+github.com/pieoneers/jsonapi-go v0.0.0-20190427133345-a51832cf364e h1:gK9boGiXTe/g4N7Fb/IjmbOm8UEUuaSmwnXWjlSq3GU=
+github.com/pieoneers/jsonapi-go v0.0.0-20190427133345-a51832cf364e/go.mod h1:Cu+e3Ld0kU/jwnEkHFvQjqB7hafjYsF+Wo18EZp/xkg=
+github.com/pieoneers/jsonapi-go v0.0.0-20190427135018-f01ada499258 h1:Mdh4q+OLElgLtSWUGHQhjj7NGrQroAhGk3UHCKCa+eU=
+github.com/pieoneers/jsonapi-go v0.0.0-20190427135018-f01ada499258/go.mod h1:Cu+e3Ld0kU/jwnEkHFvQjqB7hafjYsF+Wo18EZp/xkg=
+github.com/pieoneers/jsonapi-go v0.0.0-20190427135344-de14e5916e69 h1:Z7jH/0W3JZkleQbtikY6cNV/xkazBixBDxcT1nlIpV4=
+github.com/pieoneers/jsonapi-go v0.0.0-20190427135344-de14e5916e69/go.mod h1:Cu+e3Ld0kU/jwnEkHFvQjqB7hafjYsF+Wo18EZp/xkg=
+github.com/pieoneers/jsonapi-go v0.0.0-20190427140441-ab79e1e42366 h1:qsU7QRXYBJlxRNVJPOvKI+oFLm4yYdUSFf7IbI0d53w=
+github.com/pieoneers/jsonapi-go v0.0.0-20190427140441-ab79e1e42366/go.mod h1:Cu+e3Ld0kU/jwnEkHFvQjqB7hafjYsF+Wo18EZp/xkg=
 github.com/ugorji/go v1.1.4 h1:j4s+tAvLfL3bZyefP2SEWmhBzmuIlH/eqNuPdFPgngw=
 github.com/ugorji/go v1.1.4/go.mod h1:uQMGLiO92mf5W77hV/PUCpI3pbzQx3CRekS0kk+RGrc=
 github.com/ugorji/go/codec v0.0.0-20190425100026-1d7ab5c50b36/go.mod h1:G7mAYYxgmS0lVkHyy2hEOLQCFB0DlQFTMLWggykrydY=
