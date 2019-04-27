@@ -10,8 +10,6 @@ import (
   "github.com/pieoneers/jsonapi-go"
 )
 
-const jsonapiContentType = "application/vnd.api+json"
-
 type Request struct {
   Method string
   URL *url.URL
@@ -34,10 +32,10 @@ func NewRequest(method, rawurl string, in interface{}) (*Request, error) {
 
   req.Query = req.URL.Query()
 
-  req.Header.Add("Accept", jsonapiContentType)
+  req.Header.Add("Accept", jsonapi.ContentType)
 
   if reflect.TypeOf(in) != nil {
-    req.Header.Add("Content-Type", jsonapiContentType)
+    req.Header.Add("Content-Type", jsonapi.ContentType)
 
     payload, marshalErr := jsonapi.Marshal(in)
     if marshalErr != nil {
