@@ -1,7 +1,19 @@
-# Go Jsonapi client
-This JSON API client library for Go.
+# Go jsonapi client
 
-# Usage
+[![Go Report Card](https://goreportcard.com/badge/github.com/pieoneers/jsonapi-client-go)](https://goreportcard.com/report/github.com/pieoneers/jsonapi-client-go)
+
+JSON API client library for Go. Better use with [jsonapi-go](https://github.com/pieoneers/jsonapi-go) library.
+
+### Installing
+
+``` go get -u "github.com/pieoneers/jsonapi-client-go" ```
+
+### Running the tests
+Go to jsonapi-client-go library directory and run:
+
+``` go test```
+
+### Usage
 
 ``` go
 package main
@@ -64,7 +76,7 @@ func main() {
     return
   }
 
-  request.Query.Set("filter[color]", "red") //Query is an url.Values attribute of Request, it used to pass URL query params
+  request.Query.Set("filter[color]", "red")
 
   response, responseErr := jsonapiClient.Do(request, &target) //Proceed the request
 
@@ -72,7 +84,7 @@ func main() {
     log.Println(responseErr)
     return
   }
-  //Proceed the data(target) here
+  //Proceed the data from `target` here
 
 }
 ```

@@ -1,11 +1,11 @@
 package client
 
 import (
-  "net/http"
-  "github.com/pieoneers/jsonapi-go"
+	"github.com/pieoneers/jsonapi-go"
+	"net/http"
 )
 
 type Response struct {
-  http.Response
-  Document *jsonapi.Document
+	http.Response
+	Document *jsonapi.Document
 }
