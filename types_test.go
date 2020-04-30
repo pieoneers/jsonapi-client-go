@@ -19,6 +19,10 @@ func(b Book) GetType() string {
   return "books"
 }
 
+func(b Book) SetType(string) error {
+  return nil
+}
+
 func(b Book) GetData() interface{} {
   return b
 }
