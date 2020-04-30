@@ -1,30 +1,34 @@
+// Copyright (c) 2020 Pieoneers Software Incorporated. All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package client_test
 
 import (
-  "fmt"
-  "bytes"
-  "text/template"
+	"bytes"
+	"fmt"
+	"text/template"
 )
 
 var templates map[string]*template.Template
 
 func Template(name string, data interface{}) (*bytes.Buffer, error) {
-  var err error
+	var err error
 
-  buf := &bytes.Buffer{}
+	buf := &bytes.Buffer{}
 
-  if t, ok := templates[name]; ok {
-    err = t.Execute(buf, data)
-  } else {
-    err = fmt.Errorf("Template %v was not found", name)
-  }
+	if t, ok := templates[name]; ok {
+		err = t.Execute(buf, data)
+	} else {
+		err = fmt.Errorf("Template %v was not found", name)
+	}
 
-  return buf, err
+	return buf, err
 }
 
 func InitTemplates() {
 
-  errorsDocumentString := `
+	errorsDocumentString := `
     {
       "errors": [
         {{range $index, $element := .}}
@@ -40,7 +44,7 @@ func InitTemplates() {
     }
   `
 
-  booksDocumentString := `
+	booksDocumentString := `
     {
       "data": [
         {{range $index, $element := .}}
@@ -51,13 +55,13 @@ func InitTemplates() {
     }
   `
 
-  bookDocumentString := `
+	bookDocumentString := `
     {
       "data": {{template "book" .}}
     }
   `
 
-  bookPayloadDocumentString := `
+	bookPayloadDocumentString := `
     {
       "data": {
         "type": "books",
@@ -66,7 +70,7 @@ func InitTemplates() {
     }
   `
 
-  bookString := `
+	bookString := `
     {{define "book"}}
       {
         "type": "books",
@@ -76,7 +80,7 @@ func InitTemplates() {
     {{end}}
   `
 
-  bookAttributesString := `
+	bookAttributesString := `
     {{define "book-attributes"}}
       {
         "title": "{{.Title}}",
@@ -85,23 +89,23 @@ func InitTemplates() {
     {{end}}
   `
 
-  errorsDocumentTemplate := template.Must(template.New("errors").Parse(errorsDocumentString))
+	errorsDocumentTemplate := template.Must(template.New("errors").Parse(errorsDocumentString))
 
-  booksDocumentTemplate := template.Must(template.New("books-document").Parse(booksDocumentString))
-  booksDocumentTemplate  = template.Must(booksDocumentTemplate.Parse(bookString))
-  booksDocumentTemplate  = template.Must(booksDocumentTemplate.Parse(bookAttributesString))
+	booksDocumentTemplate := template.Must(template.New("books-document").Parse(booksDocumentString))
+	booksDocumentTemplate = template.Must(booksDocumentTemplate.Parse(bookString))
+	booksDocumentTemplate = template.Must(booksDocumentTemplate.Parse(bookAttributesString))
 
-  bookDocumentTemplate := template.Must(template.New("book-document").Parse(bookDocumentString))
-  bookDocumentTemplate  = template.Must(bookDocumentTemplate.Parse(bookString))
-  bookDocumentTemplate  = template.Must(bookDocumentTemplate.Parse(bookAttributesString))
+	bookDocumentTemplate := template.Must(template.New("book-document").Parse(bookDocumentString))
+	bookDocumentTemplate = template.Must(bookDocumentTemplate.Parse(bookString))
+	bookDocumentTemplate = template.Must(bookDocumentTemplate.Parse(bookAttributesString))
 
-  bookPayloadDocumentTemplate := template.Must(template.New("book-payload-document").Parse(bookPayloadDocumentString))
-  bookPayloadDocumentTemplate  = template.Must(bookPayloadDocumentTemplate.Parse(bookAttributesString))
+	bookPayloadDocumentTemplate := template.Must(template.New("book-payload-document").Parse(bookPayloadDocumentString))
+	bookPayloadDocumentTemplate = template.Must(bookPayloadDocumentTemplate.Parse(bookAttributesString))
 
-  templates = map[string]*template.Template{
-    "errors":            errorsDocumentTemplate,
-    "books":              booksDocumentTemplate,
-    "book":                bookDocumentTemplate,
-    "book-payload": bookPayloadDocumentTemplate,
-  }
+	templates = map[string]*template.Template{
+		"errors":       errorsDocumentTemplate,
+		"books":        booksDocumentTemplate,
+		"book":         bookDocumentTemplate,
+		"book-payload": bookPayloadDocumentTemplate,
+	}
 }
