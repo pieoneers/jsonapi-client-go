@@ -9,6 +9,16 @@ import (
 	"net/http"
 )
 
+
+// Response extends http.Response with jsonapi.Document.
+// jsonapi.Document contatin follow fields
+// see more in jsonapi-go package documentation
+// type Document struct {
+//   Data     *documentData     `json:"data,omitempty"`
+//   Errors   []*ErrorObject    `json:"errors,omitempty"`
+//   Included []*ResourceObject `json:"included,omitempty"`
+//   Meta     json.RawMessage   `json:"meta,omitempty"`
+// }
 type Response struct {
 	http.Response
 	Document *jsonapi.Document

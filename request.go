@@ -14,14 +14,21 @@ import (
 	"reflect"
 )
 
+//Request represents the request data
 type Request struct {
-	Method string
+  //HTTP request method
+  Method string
+  //Request URL or it may be a path to the resource
 	URL    *url.URL
+  // Query params
 	Query  url.Values
+  // Request headers
 	Header http.Header
+  // Request body
 	Body   io.ReadCloser
 }
 
+// NewRequest return new Request instance with corresponding parameters
 func NewRequest(method, rawurl string, in interface{}) (*Request, error) {
 	url, urlErr := url.ParseRequestURI(rawurl)
 	if urlErr != nil {
@@ -52,6 +59,7 @@ func NewRequest(method, rawurl string, in interface{}) (*Request, error) {
 	return &req, nil
 }
 
+//RequestURI returns request URI 
 func (req *Request) RequestURI() string {
 	req.URL.RawQuery = req.Query.Encode()
 	return req.URL.RequestURI()

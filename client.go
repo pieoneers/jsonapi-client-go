@@ -11,11 +11,13 @@ import (
 	"reflect"
 )
 
+//Client represents JSON API client and contain configuration values in Config
 type Client struct {
 	httpClient *http.Client
 	Config     Config
 }
 
+// New client method returns new Client instance
 func NewClient(c Config) *Client {
 	config := NewConfig(c)
 
@@ -29,6 +31,7 @@ func NewClient(c Config) *Client {
 	return client
 }
 
+//Get returns GET ready Request
 func (c *Client) Get(path string) (*Request, error) {
 	req, reqErr := NewRequest("GET", path, nil)
 	if reqErr != nil {
@@ -38,6 +41,7 @@ func (c *Client) Get(path string) (*Request, error) {
 	return req, nil
 }
 
+//Head returns HEAD ready Request
 func (c *Client) Head(path string) (*Request, error) {
 	req, reqErr := NewRequest("HEAD", path, nil)
 	if reqErr != nil {
@@ -47,6 +51,7 @@ func (c *Client) Head(path string) (*Request, error) {
 	return req, nil
 }
 
+//Post returns POST ready Request
 func (c *Client) Post(path string, in interface{}) (*Request, error) {
 	req, reqErr := NewRequest("POST", path, in)
 	if reqErr != nil {
@@ -56,6 +61,7 @@ func (c *Client) Post(path string, in interface{}) (*Request, error) {
 	return req, nil
 }
 
+//Do proceeds the provided Request
 func (c *Client) Do(req *Request, out interface{}) (*Response, error) {
 	baseURL := c.Config.BaseURL
 	httpClient := c.httpClient

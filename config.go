@@ -7,12 +7,14 @@ package client
 import (
 	"time"
 )
-
+//Config represents client configuration data, like base URL and client timeout
+//Base URL used as prefix for all requests
 type Config struct {
 	BaseURL string
 	Timeout time.Duration
 }
 
+// NewConfig check the provided config values, if some value is empty it will fill it by default value. 
 func NewConfig(c Config) Config {
 	defaults := Config{
 		BaseURL: "http://localhost",

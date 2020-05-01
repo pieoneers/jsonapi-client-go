@@ -13,6 +13,35 @@ import (
 	. "github.com/onsi/gomega"
 )
 
+// func ExampleRequest_NewRequest() {
+//   type Item struct{
+//     ID string `json:"-"`
+//     Type string `json:"-"`
+//     Title string `json:"title"`
+//     CreatedAt time.Time `json:"created_at"`
+//   }
+//
+//   type Items []Item
+//
+//   var target Items
+//
+//   request, requestErr := client.NewRequest("GET", "/data", nil)
+//
+//   if requestErr != nil {
+//     log.Println("requestErr: ",requestErr)
+//     return
+//   }
+//
+//   request.Query.Set("filter[query]", "silver")
+//
+//   response, responseErr := jsonapiClient.Do(request, &target)
+//
+//   if responseErr != nil {
+//     log.Println("responseErr: ", responseErr)
+//     return
+//   }
+// }
+
 var _ = Describe("Request", func() {
 
 	Describe("NewRequest", func() {
