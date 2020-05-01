@@ -88,3 +88,6 @@ func main() {
 
 }
 ```
+
+### See also
+* [jsonapi-go](https://github.com/pieoneers/jsonapi-go)
