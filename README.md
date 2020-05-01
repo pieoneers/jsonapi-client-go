@@ -2,14 +2,14 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/pieoneers/jsonapi-client-go)](https://goreportcard.com/report/github.com/pieoneers/jsonapi-client-go)
 
-JSON API client library for Go. Better use with [jsonapi-go](https://github.com/pieoneers/jsonapi-go) library.
+JSON API client package for Go. Better use with [jsonapi-go](https://github.com/pieoneers/jsonapi-go) package.
 
 ### Installing
 
 ``` go get -u "github.com/pieoneers/jsonapi-client-go" ```
 
 ### Running the tests
-Go to jsonapi-client-go library directory and run:
+Go to jsonapi-client-go package directory and run:
 
 ``` go test```
 
@@ -32,7 +32,7 @@ type Item struct{
   CreatedAt time.Time `json:"created_at"`
 }
 
-// jsonapi-go library require a few methods for data structures to be able unmarshal data from json api document.
+// jsonapi-go package require a few methods for data structures to be able unmarshal data from json api document.
 //
 //   SetID(string) error
 //   SetType(string) error
